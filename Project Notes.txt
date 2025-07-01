@@ -1,0 +1,196 @@
+mngodb deployment part :-----------
+
+mongodb+srv://tirthsakariya:<db_password>@cluster0.imxjf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+mongodb+srv://tirthsakariya:tirth9333@cluster0.imxjf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+tirth9333
+
+
+
+
+some packages info about Airbnb project that we download on vs terminal :-
+
+node
+nodemon
+
+npm i express-session(for session)
+npm i connect-flash(for flash)
+
+passport :-
+
+npm i passport
+npm i passport-local
+npm i passport-local-mongoose
+
+image upload(multer) :-
+
+npm i multer
+
+for .env files :-
+
+npm i dotenv
+
+for some extra features to upload image on clodinary with multer :-
+
+npm i cloudinary
+
+npm i multer-storage-cloudinary
+
+
+
+Dartabase Reletionships :-
+
+Mongo Reletionships :-
+^
+|	some of SQLReletionships :
+|	(sql via Foreign key)
+|
+|	1.one to one
+|
+|	2.one to many
+|
+|	3.many to many
+|--------------------------------------------------------
+*one to many/Approch 1(one to few) :-
+
+--> Store the child document inside parent
+
+example :-
+
+{ 
+  _id: ObjectId("651d1b116976164a9cbf5520"),
+usename:'sherlockhomes',
+addresses: [
+	{location:'221b Baker street',city:'london'},
+	{location:'P36 DownTown' ,city:'london'}
+],
+__v:1
+},
+-----------------------------------------------------------
+*One to Many / Approch 2 :-
+
+--> store a reference to the child document inside parent
+
+ _id: ObjectId("651d1b116976164a9cbf5520"),
+name:'Rahul Kumar',
+orders:[
+	ObjectId("651d1e5a06e366283d3ae002"),
+	ObjectId("651d1e5a06e366283d3ae003"),
+],
+__v:0
+}
+-----------------------------------------------------------
+* Handling Deletion :-------------
+
+using Mongoose Middleware
+
+We can use 2 Middlewares:--
+
+
+
+
+
+
+pre :- runbefore the query is excuted
+
+post  :- run after rhe query is excuted
+
+code :-
+
+customerSchema.post("findOneAndDelete",async (customer) => {
+  if(customer.orders.length){
+	let res = await Order.deleteMany({_id:{$in:customer.order}});
+console.log(res);
+}
+});
+------------------------------------------------------------
+
+* project phase-2 (part-d)
+
+--> authentication vs authorization
+
+authentication:- it is the process of verifying who someone is....
+
+authorization:- it is the process of verifying what specific applications, files, and data a user has access to
+
+--> How Password Stored ? :-
+
+we never store the passwords as it is.we store hased form
+
+  password       | hashing  |   how it store
+"helloworld"-->	 | function |  "936acaaa266bb9cbe981e9....."
+
+--> What is Hashing ? :-
+
+* for every input,there is fixed output.
+
+* they are one-way function,we can't get input from output.
+
+* for a different input,there is a different output but same length.
+
+* small changes in input should bring large changes in output. 
+
+--> What is Salting ? :-
+
+* password salting is a technique to protect passwords stored in database by adding a string of 32 or more charecters and then hasing them.
+
+--> passport :-
+
+npm i passport
+npm i passport-local
+npm i passport-local-mongoose
+
+--> User Model :-
+
+user:username , password , email
+
+* You are free to define your user how you like.
+
+* Passpoet-lcal Mongoose will add a usename , hash and salt field to store the username and hashed password and salt value.
+
+* additionaly , passport-local Mongoose adds some method to your schema.see the API
+
+--> Configuring Strategy :-
+
+* passport.initialize()
+-> a middleware that initilize password.
+
+* passport.session()
+-> a web application needs the ability to idetify users as they browse from page to page.
+
+->the session of request  and response , each associeted with the same user,is known as a session.
+
+* passport.use(new LocalStrategy(User.authenticate()));
+
+---------------------------------------------------------------------------------------------------------
+
+* Project phase-2 (Part :- e) :-
+
+--> connecting Login Route :-
+
+* How to check if User is Logged in ?
+
+*req.isAuthenticated() //passport method
+
+--> Logout User :-
+
+GET /logout
+
+router.get("/logout",(req,res,next) => {
+    req.logout((err) => {
+        if(err){
+         return next(err);
+        }
+        req.flash("success","You are Logged out !!");
+        res.redirect("/listings");
+    });
+});
+
+--> Login after SignUp :-
+
+* Passport login method automatically establish a login session
+
+* we can invoke login to automatically login a user.
+
+gd
